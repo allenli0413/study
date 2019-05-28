@@ -1,1 +1,1 @@
-include ':app', ':circlelibrary'
+include ':app'

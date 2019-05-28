@@ -9,33 +9,20 @@
     tools:context=".view.MainTestActivity">
 
     <Button
+        android:id="@+id/bt_jump"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center"
-        android:onClick="single"
-        android:text="加载一张图片"
-        tools:ignore="OnClick" />
+        android:text="跳转到下一个Activity" />
 
-
-    <Button
+    <TextView
+        android:id="@+id/tv_text"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:text="文本"
         android:gravity="center"
-        android:onClick="more"
-        android:text="加载100张图片"
-        tools:ignore="OnClick" />
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/scrooll_line"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
-
-    </ScrollView>
+        android:background="#f00"
+        android:textColor="#0f0"
+        android:textSize="20dp"/>
 
 </LinearLayout>
