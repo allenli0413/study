@@ -30,6 +30,14 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.alibaba:fastjson:1.2.58'
+    implementation project(path: ':hearttreelibrary')
+    implementation project(path: ':networklistenerlibrary')
+    implementation project(path: ':butterknifelibrary')
+    implementation project(path: ':Annotation')
+    annotationProcessor project(path: ':Complier')
+    implementation project(path: ':recyclerviewlibrary')
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation project(path: ':pluginlibrary')
 
 //    implementation 'com.jakewharton:butterknife:10.1.0'
 //    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
