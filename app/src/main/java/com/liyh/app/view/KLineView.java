@@ -26,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-
 /**
  * @author Yahri Lee
  * @date 2019 年 02 月 21 日
@@ -36,20 +35,23 @@ import java.util.Map;
 public class KLineView extends View {
 
     private static final String TAG = "KLineView";
-    private int xYextColor = Color.parseColor("#FF979EC2");
-    private int xTextSize = 26;
+    private int xTextColor = Color.parseColor("#FF979EC2");
+    private int yTextColor = Color.parseColor("#FF979EC2");
     private int xPointColor = Color.parseColor("#FF7F8EC8");
-    private int xLineWidth = 1;
-    private int dataPointColor1 = Color.parseColor("#FFB354");
-    private int dataLineColor1 = Color.parseColor("#FFB354");
-    private int dataLineWidth1 = 2;
-    private int dataPointColor2 = Color.parseColor("#FF4FC3FD");
-    private int dataLineColor2 = Color.parseColor("#FF4FC3FD");
-    private int dataLineWidth2 = 2;
     private int todayMiddelColor = Color.WHITE;
-    private int todayOutColor = Color.parseColor("#CCA2BDFF");
-    private int rectColor1 = Color.parseColor("#19FFB354");
-    private int rectColor2 = Color.parseColor("#194FC3FD");
+    private int todayOutColor = Color.parseColor("#33A2BDFF");
+
+    private float xTextSize;
+    private float yTextSize;
+    private int xLineWidth = 1;
+    private int dataPointColor1;
+    private int dataLineColor1;
+    private int dataLineWidth1 = 2;
+    private int dataPointColor2;
+    private int dataLineColor2;
+    private int dataLineWidth2 = 2;
+    private int rectColor1;
+    private int rectColor2;
     private Map<String, Float> datas = new LinkedHashMap<>();
     private Map<String, Float> data2s = new LinkedHashMap<>();
     private Paint yTextPaint;
@@ -58,15 +60,18 @@ public class KLineView extends View {
     private Paint xLinePaint;
     private Paint dataPointPaint;
     private Paint dataLinePaint;
-    private float max;
+    private float max = 160;
     private int yCount = 5;
-    private int xCount = 6;
+    private float xCount = 6;
     private float width;  //控件宽度
     private float height; //控件高度
     private float xCircleRadius = 4f;
-    private float valueCircleRadius = 8f;
+    private float littleValueCircleRadius = 6f;
+    private float normalValueCircleRadius = 8f;
+    private float middleValueCircleRadius = 10f;
+    private float outValueCircleRadius = 18f;
     private OnPointClickListener mListener;
-    LinkedList<DataPoint> points = new LinkedList<>();
+    private LinkedList<DataPoint> points = new LinkedList<>();
     private Paint todayWhitePaint;
     private Paint todayGrayPaint;
     private int clickRadius = 12;
@@ -74,10 +79,15 @@ public class KLineView extends View {
     private Paint dataPointPaint2;
     private Paint rectPaint1;
     private Paint rectPaint2;
-    private boolean is2Line = false;
-    private boolean isNeedRect = false;
-    private int yTextColor = Color.parseColor("#FF979EC2");
-    private int yTextSize = 26;
+    private boolean is2Line;
+    private boolean isNeedRect;
+    private float normal1Min;
+    private float normal1Max;
+    private float normal2Min;
+    private float normal2Max;
+    private float yLength;
+    private boolean isFloat = false;
+
 
     public KLineView(Context context) {
         this(context, null);
@@ -89,16 +99,22 @@ public class KLineView extends View {
 
     public KLineView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray ta = context.obtainStyledAttributes(attrs,
-                R.styleable.KLineView);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KLineView);
         if (ta != null) {
-//            circleColor = ta.getColor(R.styleable.circleView_circleColor, 0);
-//            arcColor = ta.getColor(R.styleable.circleView_arcColor, 0);
-//            textColor = ta.getColor(R.styleable.circleView_textColor, 0);
-//            textSize = ta.getDimension(R.styleable.circleView_textSize, 50);
-//            text = ta.getString(R.styleable.circleView_text);
-//            startAngle = ta.getInt(R.styleable.circleView_startAngle, 0);
-//            sweepAngle = ta.getInt(R.styleable.circleView_sweepAngle, 90);
+            dataLineColor1 = ta.getColor(R.styleable.KLineView_lineColor, Color.parseColor("#77F55D"));
+            dataPointColor1 = ta.getColor(R.styleable.KLineView_pointColor, Color.parseColor("#77F55D"));
+            rectColor1 = ta.getColor(R.styleable.KLineView_rectColor1, Color.parseColor("#19FFB354"));
+            xTextSize = ta.getDimension(R.styleable.KLineView_xTextSize, 26);
+            yTextSize = ta.getDimension(R.styleable.KLineView_yTextSize, 26);
+            is2Line = ta.getBoolean(R.styleable.KLineView_is2Line, false);
+            isNeedRect = ta.getBoolean(R.styleable.KLineView_isNeedRect, false);
+            dataLineColor2 = ta.getColor(R.styleable.KLineView_lineColor2, Color.parseColor("#FF4FC3FD"));
+            dataPointColor2 = ta.getColor(R.styleable.KLineView_pointColor2, Color.parseColor("#FF4FC3FD"));
+            rectColor2 = ta.getColor(R.styleable.KLineView_rectColor2, Color.parseColor("#194FC3FD"));
+            normal1Min = ta.getFloat(R.styleable.KLineView_normal1Min, 60);
+            normal1Max = ta.getFloat(R.styleable.KLineView_normal1Max, 90);
+            normal2Min = ta.getFloat(R.styleable.KLineView_normal2Min, 90);
+            normal2Max = ta.getFloat(R.styleable.KLineView_normal2Max, 140);
             ta.recycle();
         }
         init();
@@ -106,30 +122,29 @@ public class KLineView extends View {
 
     private void init() {
 
-        datas.put("11-29", 8000f);
-        datas.put("11-30", 10000f);
-        datas.put("11-31", 0f);
-        datas.put("12-01", 15000f);
-        datas.put("前天", 13000f);
-        datas.put("昨天", 7000f);
-        datas.put("今天", 11700f);
+        datas.put("11-29", 85f);
+        datas.put("11-30", 90f);
+        datas.put("11-31", 75f);
+        datas.put("12-01", 68f);
+        datas.put("前天", 72f);
+        datas.put("昨天", 65f);
+        datas.put("今天", 88f);
 
-        data2s.put("11-29", 14000f);
-        data2s.put("11-30", 12000f);
-        data2s.put("11-31", 19000f);
-        data2s.put("12-01", 20000f);
-        data2s.put("前天", 18000f);
-        data2s.put("昨天", 10000f);
-        data2s.put("今天", 14200f);
+        data2s.put("11-29", 100f);
+        data2s.put("11-30", 95f);
+        data2s.put("11-31", 117f);
+        data2s.put("12-01", 133f);
+        data2s.put("前天", 124f);
+        data2s.put("昨天", 120f);
+        data2s.put("今天", 106F);
 
         xCount = datas.size() - 1;
-        max = 25000;
         yTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         yTextPaint.setColor(yTextColor);
         yTextPaint.setTextSize(yTextSize);
 
         xTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        xTextPaint.setColor(xYextColor);
+        xTextPaint.setColor(xTextColor);
         xTextPaint.setTextSize(xTextSize);
         xPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         xPointPaint.setColor(xPointColor);
@@ -158,10 +173,15 @@ public class KLineView extends View {
 
         if (isNeedRect) {
             rectPaint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+            rectPaint1.setStyle(Paint.Style.FILL_AND_STROKE);
+            rectPaint1.setStrokeWidth(1);
             rectPaint1.setColor(rectColor1);
             if (is2Line) {
                 rectPaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+                rectPaint2.setStyle(Paint.Style.FILL_AND_STROKE);
+                rectPaint2.setStrokeWidth(1);
                 rectPaint2.setColor(rectColor2);
+
             }
         }
 
@@ -234,24 +254,22 @@ public class KLineView extends View {
         float each = max / yCount;
         drawYText(canvas, eachY, each);
 
-        String maxText = "" + max;
+        String maxText = "" + (isFloat ? String.format("%.2f", max): (int) max);
         Rect rectY = new Rect();
         yTextPaint.getTextBounds(maxText, 0, maxText.length(), rectY);
         // x轴刻度起点
         int xStart = getPaddingLeft() + rectY.width();
         //折线图宽度
-        float w = width - getPaddingRight() - getPaddingLeft() - xStart;
-        float eachX = w / xCount;
+        float w = width - getPaddingRight() - xStart;
+        float eachX = (float) (w / (xCount + 1));
         int i = 0;
         PointF lastPoint = null;
+        PointF lastPoint2 = null;
         points.clear();
         float rectLeft = 0;
-        float min1Y = height;
-        float max1Y = 0;
-        float min2Y = height;
-        float max2Y = 0;
-
+        yLength = height - getPaddingTop() - getPaddingBottom() - xTextHeight - 10;
         for (Map.Entry<String, Float> entry : datas.entrySet()) {
+            //x轴值
             String xText = entry.getKey();
             Rect xTextRect = new Rect();
             xTextPaint.getTextBounds(xText, 0, xText.length(), xTextRect);
@@ -269,6 +287,7 @@ public class KLineView extends View {
             float circleY = height - getPaddingBottom() - xTextHeight - 10;
             if (i == 0) {
                 rectLeft = circleX;
+                drawRect(canvas, rectLeft);
             }
             //绘制x轴小圆点
             canvas.drawCircle(circleX, circleY, xCircleRadius, xPointPaint);
@@ -278,54 +297,54 @@ public class KLineView extends View {
             //绘制x轴竖线
             canvas.drawLine(circleX, getPaddingTop(), circleX, circleY, xLinePaint);
             Float dataValue = datas.get(xText);
-            float yLength = height - getPaddingTop() - getPaddingBottom() - xTextHeight - 10;
+            //今天的圆点半径，比非今天的小
+            float valueCircleRadius = TextUtils.equals("今天", xText) ? littleValueCircleRadius : normalValueCircleRadius;
+
             if (dataValue != null && dataValue != 0) {
-                float dataY = yLength - (dataValue / max) * (yLength * 5 / 6) + getPaddingTop();
+                float dataY = getY(dataValue);
+                //绘制1的今天的外圈
                 if (TextUtils.equals("今天", xText)) {
-                    canvas.drawCircle(circleX, dataY, 18, todayGrayPaint);
-                    canvas.drawCircle(circleX, dataY, 10, todayWhitePaint);
+                    canvas.drawCircle(circleX, dataY, outValueCircleRadius, todayGrayPaint);
+                    canvas.drawCircle(circleX, dataY, middleValueCircleRadius, todayWhitePaint);
                 }
-                valueCircleRadius = TextUtils.equals("今天", xText) ? valueCircleRadius - 2 : valueCircleRadius;
+                //绘制1的今天的点
                 canvas.drawCircle(circleX, dataY, valueCircleRadius, dataPointPaint);
                 DataPoint dataPoint1 = new DataPoint(circleX, dataY, xText, datas.get(xText));
                 points.add(dataPoint1);
                 if (lastPoint == null) {
                     lastPoint = new PointF();
                 } else {
+                    //绘制折线1
                     canvas.drawLine(lastPoint.x, lastPoint.y, circleX, dataY, dataLinePaint);
                 }
 
                 lastPoint.x = circleX;
                 lastPoint.y = dataY;
-                min1Y = Math.min(min1Y, dataY);
-                max1Y = Math.max(max1Y, dataY);
             } else {
                 lastPoint = null;
             }
             if (is2Line) {
-                PointF lastPoint2 = null;
                 Float dataValue2 = data2s.get(xText);
                 if (dataValue2 != null && dataValue2 != 0) {
-                    float dataY2 = yLength - (dataValue2 / max) * (yLength * 5 / 6) + getPaddingTop();
+                    float dataY2 = getY(dataValue2);
+                    //绘制今天的外圈
                     if (TextUtils.equals("今天", xText)) {
-                        canvas.drawCircle(circleX, dataY2, 18, todayGrayPaint);
-                        canvas.drawCircle(circleX, dataY2, 10, todayWhitePaint);
+                        canvas.drawCircle(circleX, dataY2, outValueCircleRadius, todayGrayPaint);
+                        canvas.drawCircle(circleX, dataY2, middleValueCircleRadius, todayWhitePaint);
                     }
-                    valueCircleRadius = TextUtils.equals("今天", xText) ? valueCircleRadius - 2 : valueCircleRadius;
+//                    valueCircleRadius = TextUtils.equals("今天", xText) ? valueCircleRadius - 2 : valueCircleRadius;
+                    //绘制今天的点
                     canvas.drawCircle(circleX, dataY2, valueCircleRadius, dataPointPaint2);
                     DataPoint dataPoint2 = new DataPoint(circleX, dataY2, xText, data2s.get(xText));
                     points.add(dataPoint2);
                     if (lastPoint2 == null) {
                         lastPoint2 = new PointF();
                     } else {
+                        //绘制折线2
                         canvas.drawLine(lastPoint2.x, lastPoint2.y, circleX, dataY2, dataLinePaint2);
                     }
-
-
                     lastPoint2.x = circleX;
                     lastPoint2.y = dataY2;
-                    min2Y = Math.min(min2Y, dataY2);
-                    max2Y = Math.max(max2Y, dataY2);
                 } else {
                     lastPoint2 = null;
                 }
@@ -333,15 +352,27 @@ public class KLineView extends View {
             i++;
 
         }
+
+    }
+
+    private void drawRect(Canvas canvas, float rectLeft) {
         if (isNeedRect) {
-            RectF rectF1 = new RectF(rectLeft, min1Y, width, max1Y);
+            float min1Y = getY(normal1Min);
+            float max1Y = getY(normal1Max);
+
+            RectF rectF1 = new RectF(rectLeft, max1Y, width, min1Y);
             canvas.drawRect(rectF1, rectPaint1);
             if (is2Line) {
+                float min2Y = getY(normal2Min);
+                float max2Y = getY(normal2Max);
                 RectF rectF2 = new RectF(rectLeft, max2Y, width, min2Y);
                 canvas.drawRect(rectF2, rectPaint2);
             }
         }
+    }
 
+    private float getY(float value) {
+        return yLength - (value / max) * (yLength * 5 / 6) + getPaddingTop();
     }
 
     /**
@@ -354,8 +385,8 @@ public class KLineView extends View {
     private void drawYText(Canvas canvas, float eachY, float each) {
         for (int i = 0; i < yCount; i++) {
             Rect yTextRect = new Rect();
-            int yValue = (int) (max - each * i);
-            String yText = yValue + "";
+            float yValue = max - each * i;
+            String yText = isFloat ? String.format("%.2f", yValue) : (int) yValue + "";
             yTextPaint.getTextBounds(yText, 0, yText.length(), yTextRect);
             float x = getPaddingLeft();
             float y = getPaddingTop() + eachY * (1 + i) + yTextRect.height() / 2;
@@ -365,7 +396,6 @@ public class KLineView extends View {
     }
 
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -373,11 +403,11 @@ public class KLineView extends View {
             case MotionEvent.ACTION_UP:
                 float x = event.getX();
                 float y = event.getY();
-                Log.i(TAG, "onTouchEvent x = " + x + ",y = " + y);
+                Log.d(TAG, "onTouchEvent x = " + x + ",y = " + y);
                 for (DataPoint point : points) {
                     float xPoint = point.xPoint;
                     float yPoint = point.yPoint;
-                    Log.i(TAG, "数据点：x = " + xPoint + ",y = " + yPoint);
+                    Log.d(TAG, "数据点：x = " + xPoint + ",y = " + yPoint);
                     if (x > xPoint - clickRadius && x < xPoint + clickRadius
                             && y > yPoint - clickRadius && y < yPoint + clickRadius) {
                         if (mListener != null) {
@@ -395,7 +425,7 @@ public class KLineView extends View {
         this.mListener = onPointClickListener;
     }
 
-    interface OnPointClickListener {
+    public interface OnPointClickListener {
         void onClick(String xValue, float yValue);
     }
 
@@ -427,31 +457,33 @@ public class KLineView extends View {
 
     public void setDatas(Map<String, Float> datas) {
         this.datas = datas;
+        invalidate();
     }
 
     public void setDatas(Map<String, Float> datas, Map<String, Float> data2s) {
         this.datas = datas;
         this.data2s = data2s;
         is2Line = true;
+        invalidate();
     }
 
     public void setNeedRect(boolean needRect) {
         isNeedRect = needRect;
     }
 
-    public void setyTextColor(int yTextColor) {
+    public void setYTextColor(int yTextColor) {
         this.yTextColor = yTextColor;
     }
 
-    public void setyTextSize(int yTextSize) {
+    public void setYTextSize(int yTextSize) {
         this.yTextSize = yTextSize;
     }
 
-    public void setxYextColor(int xYextColor) {
-        this.xYextColor = xYextColor;
+    public void setXTextColor(int xTextColor) {
+        this.xTextColor = xTextColor;
     }
 
-    public void setxTextSize(int xTextSize) {
+    public void setXTextSize(int xTextSize) {
         this.xTextSize = xTextSize;
     }
 
@@ -502,4 +534,20 @@ public class KLineView extends View {
     public void setRectColor2(int rectColor2) {
         this.rectColor2 = rectColor2;
     }
+
+    public void setNormal1(float normal1Min, float normal1Max) {
+        this.normal1Min = normal1Min;
+        this.normal1Max = normal1Max;
+    }
+
+
+    public void setNormal2(float normal2Min, float normal2Max) {
+        this.normal2Min = normal2Min;
+        this.normal2Max = normal2Max;
+    }
+
+    public void setYTextFloat(boolean isFloat) {
+        this.isFloat = isFloat;
+    }
+
 }

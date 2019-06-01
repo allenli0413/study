@@ -7,5 +7,37 @@
     <color name="color3">#b0e440</color>
     <color name="color2">#F7D21C</color>
     <color name="color4">#b0e440</color>
+    <color name="white">#fff</color>
     <color name="color5">#61FA68</color>
+    <color name="c_green_ff049eac">#FF049EAC</color>
+    <color name="c_green_ff3ebc6a">#FF3EBC6A</color>
+    <color name="c_green_ff3bc069">#FF3BC069</color>
+    <color name="c_green_61fa68">#FF61FA68</color>
+    <color name="c_green_b0e440">#FFb0e440</color>
+    <color name="c_green_77f55d">#FF77F55D</color>
+    <color name="c_red_ffff2c2a">#FFFF2C2A</color>
+    <color name="c_gray_ffa9bde0">#FFA9BDE0</color>
+    <color name="c_gray_ff979ec2">#FF979EC2</color>
+    <color name="c_gray_ff8d92aa">#FF8D92AA</color>
+    <color name="c_gray_ff7f8398">#FF7F8398</color>
+    <color name="c_gray_ff9196B0">#FF9196B0</color>
+    <color name="c_gray_ff6e7ed0">#FF6E7ED0</color>
+    <color name="c_gray_ff2c3564">#FF2c3564</color>
+    <color name="c_gray_ff181c2c">#FF181c2c</color>
+    <color name="c_black_ff202647">#FF202647</color>
+    <color name="c_black_ff1b203b">#FF1B203B</color>
+    <color name="c_black_99000000">#99000000</color>
+    <color name="c_yellow_f7d21c">#FFF7D21C</color>
+    <color name="c_yellow_ffffb354">#FFFFB354</color>
+    <color name="c_yellow_33ffb354">#33FFB354</color>
+    <color name="c_white_ccffffff">#CCFFFFFF</color>
+    <color name="c_blue_ffff4fc3fd">#FF4FC3FD</color>
+    <color name="c_blue_33ff4fc3fd">#334FC3FD</color>
+
+    <color name="light_gray1">#CCCCCC</color>
+    <color name="light_gray2">#F0F0F0</color>
+    <color name="light_gray">#ADADAD</color>
+    <color name="gray">#303030</color>
+    <color name="transparent">#00000000</color>
+    <color name="test">#181c2c</color>
 </resources>

@@ -1,14 +1,24 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--&lt;!&ndash;<item name="android:windowIsTranslucent">true</item>&ndash;&gt;背景透明-->
         <!--&lt;!&ndash;<item name="android:windowDisablePreview">true</item>&ndash;&gt;禁止预加载-->
-        <item name="android:windowBackground">@mipmap/ic_launcher</item>
+        <item name="android:windowBackground">@drawable/launch</item>
     </style>
+
+        <style name="style_text_legend">
+            <item name="android:gravity">center_vertical</item>
+            <item name="android:layout_width">wrap_content</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:layout_marginRight">10px</item>
+            <item name="android:textColor">@color/c_gray_ff979ec2</item>
+            <item name="android:textSize">18px</item>
+
+        </style>
 
 </resources>

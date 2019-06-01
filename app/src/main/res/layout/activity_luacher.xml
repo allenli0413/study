@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns.app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,10 +18,56 @@
         android:id="@+id/tv_text"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="文本"
-        android:gravity="center"
         android:background="#f00"
-        android:textColor="#0f0"
-        android:textSize="20dp"/>
+        android:gravity="center"
+        android:text="文本"
+        android:textColor="#fff"
+        android:textSize="20dp" />
+    <Button
+        android:id="@+id/bt_query"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="查询数据库" />
+    <TextView
+        android:onClick="createAndInsert"
+        android:id="@+id/tv_db"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f00"
+        android:gravity="center"
+        android:text="创建数据库并插入数据"
+        android:textColor="#fff"
+        android:textSize="20dp" />
+    <Button
+        android:onClick="toB"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="我是A页面（stander）" />
+    <TextView
+        android:onClick="toTreeView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f00"
+        android:gravity="center"
+        android:text="跳转到自定义动画"
+        android:textColor="#fff"
+        android:textSize="20dp" />
+    <Button
+        android:onClick="toStep"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="计步器" />
+    <TextView
+        android:onClick="toKLine"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f00"
+        android:gravity="center"
+        android:text="折线图"
+        android:textColor="#fff"
+        android:textSize="20dp" />
 
 </LinearLayout>

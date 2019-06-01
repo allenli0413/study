@@ -7,12 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.liyh.app.R;
 import com.liyh.app.okhttp.HttpUtil;
 import com.liyh.app.okhttp.IJsonDataListener;
 import com.liyh.app.okhttp.JsonResult;
 import com.liyh.app.other.MyFragment;
 import com.liyh.app.other.MyFragment2;
-import com.liyh.app.R;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -121,4 +121,6 @@ public class MainTestActivity extends AppCompatActivity {
 //        ft.add(R.id.fl_container,fragment).commitAllowingStateLoss();
 //        currentFragment = fragment;
     }
+
+
 }

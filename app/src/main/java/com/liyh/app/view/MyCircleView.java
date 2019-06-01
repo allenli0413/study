@@ -2,9 +2,11 @@ package com.liyh.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.support.annotation.Nullable;
@@ -16,7 +18,6 @@ import com.liyh.app.R;
 import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -30,11 +31,19 @@ public class MyCircleView extends View {
     private Paint mPaint;
     private Paint mPaint1;
     private int color;
-    private float width = 10f;
-    private float mSweepAnglePer = -90;
+    private float width = 20f;
+    private float mSweepAnglePer = 18;
     private float mStartAnglePer = -90;
-    private float mEndAnglePer = -54;
+    private float mEndAnglePer = 0;
     private ScheduledExecutorService executorService;
+    private int count;
+    private Canvas mCanvas;
+    private Bitmap bitmap;
+    private RectF rect;
+    private Paint bitmapPaint;
+    private Paint mTextPaint;
+    private int width1;
+    private int height;
 
     public MyCircleView(Context context) {
         this(context, null);
@@ -57,6 +66,7 @@ public class MyCircleView extends View {
 //        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
 //                new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
         executorService = new ScheduledThreadPoolExecutor(1);
+        count = (int) (360 / mSweepAnglePer);
 
 
 //        timer = new Timer();
@@ -69,10 +79,23 @@ public class MyCircleView extends View {
 
         mPaint1 = new Paint();
         mPaint1.setAntiAlias(true);
-        mPaint1.setStrokeWidth(width + 2);
+        mPaint1.setStrokeWidth(width + 5);
+        mPaint1.setStyle(Paint.Style.STROKE);
+        mPaint1.setStrokeCap(Paint.Cap.ROUND);
+        bitmapPaint = new Paint();
+
+        mPaint1 = new Paint();
+        mPaint1.setAntiAlias(true);
+        mPaint1.setStrokeWidth(width + 5);
         mPaint1.setStyle(Paint.Style.STROKE);
         mPaint1.setStrokeCap(Paint.Cap.ROUND);
 
+        mTextPaint = new Paint();
+        mTextPaint.setAntiAlias(true);
+//        mTextPaint.setTextAlign(Paint.Align.CENTER);
+        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setTextSize(150);
+        mTextPaint.setFakeBoldText(true);
     }
 
     private Timer timer;
@@ -80,46 +103,51 @@ public class MyCircleView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
+        if (mCanvas == null) {
+            int paddingLeft = getPaddingLeft();
+            int paddingTop = getPaddingTop();
+            int paddingRight = getPaddingRight();
+            int paddingBottom = getPaddingBottom();
 
-        int width = getWidth() - paddingLeft - paddingRight;
-        int height = getHeight() - paddingTop - paddingBottom;
+            width1 = getWidth() - paddingLeft - paddingRight;
+            height = getHeight() - paddingTop - paddingBottom;
+            bitmap = Bitmap.createBitmap(Math.round(getWidth()),
+                    getHeight(), Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(bitmap);
+            rect = new RectF(paddingLeft, paddingTop, width1, height);
+            SweepGradient sweepGradient = new SweepGradient(rect.centerX(), rect.centerY(),
+                    new int[]{getResources().getColor(R.color.color1),
+                            getResources().getColor(R.color.color2),
+                            getResources().getColor(R.color.color3),
+                            getResources().getColor(R.color.color4),
+                            getResources().getColor(R.color.color5),}, null);
+            mPaint1.setShader(sweepGradient);
+            mCanvas.save();
+            mCanvas.drawArc(rect, 0, 359, false, mPaint);
+            mCanvas.drawArc(rect, mStartAnglePer, mSweepAnglePer, false, mPaint1);
+            mCanvas.restore();
+        } else {
+            mCanvas.save();
+            mStartAnglePer += mSweepAnglePer;
+            mCanvas.drawArc(rect, mStartAnglePer, mSweepAnglePer, false, mPaint1);
+            mCanvas.restore();
+        }
+        canvas.save();
+        canvas.drawBitmap(bitmap, 0, 0, bitmapPaint);
+        int num = (int) (mStartAnglePer + 90) * 100 / 360;
+        String text = Integer.toString(num);
+        Rect rect = new Rect();
+        mTextPaint.getTextBounds(text, 0, text.length() - 1, rect);
+        float textH = rect.height();
+//        float textH = mTextPaint.descent() - mTextPaint.ascent();
+//        float textW = rect.width();
+        float textW = mTextPaint.measureText(text);
 
-        final RectF rect = new RectF(paddingLeft, paddingTop, width, height);
-        canvas.drawArc(rect, 0, 359, false, mPaint);
-
-        SweepGradient sweepGradient = new SweepGradient(rect.centerX(), rect.centerY(),
-                new int[]{getResources().getColor(R.color.color1),
-                        getResources().getColor(R.color.color2),
-                        getResources().getColor(R.color.color3),
-                        getResources().getColor(R.color.color4),
-                        getResources().getColor(R.color.color5),}, null);
-        mPaint1.setShader(sweepGradient);
-        canvas.drawArc(rect, mStartAnglePer, mEndAnglePer, false, mPaint1);
-
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                mSweepAnglePer += 20;
-//                canvas.drawArc(rect, -90, mSweepAnglePer, false, mPaint1);
-//            }
-//        }, 0, 100);
-
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                mStartAnglePer += 36;
-                mEndAnglePer += 36;
-                canvas.drawArc(rect, 0, mEndAnglePer % 360, false, mPaint1);
-                requestLayout();
-            }
-        }, 100, 100, TimeUnit.MILLISECONDS);
-
-//        int radius = Math.min(width, height) / 2;
-//        canvas.drawCircle(paddingLeft + width / 2, paddingTop + height / 2, radius, mPaint);
+        canvas.drawText(text, getWidth() / 2 - textW / 2, getHeight() / 2 + textH / 2, mTextPaint);
+        canvas.restore();
+        if (num < 100) {
+            postInvalidateDelayed(100);
+        }
     }
 
     @Override

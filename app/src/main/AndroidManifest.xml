@@ -11,16 +11,19 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
-        android:name="com.liyh.app.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".view.KLineActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity android:name=".view.StepActivity" />
+        <activity android:name=".database.DataBaseActivity" />
         <activity
-            android:name="com.liyh.app.LauncherActivity"
+            android:name=".LauncherActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,27 +31,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.liyh.app.glide.MainActivity" />
-        <activity android:name="com.liyh.app.network.NetWorkChangeActivity" />
+        <activity android:name=".glide.MainActivity" />
+        <activity android:name=".network.NetWorkChangeActivity" />
         <activity
-            android:name="com.liyh.app.view.CustomViewActivity"
+            android:name=".view.CustomViewActivity"
             android:screenOrientation="landscape" />
         <activity android:name="com.liyh.pluginlibrary.ProxyActivity" />
-        <!--静态注册广播，7.0以后不可用-->
-        <!--<receiver android:name="com.liyh.networklistenerlibrary.NetChangeObserverr">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <activity
+            android:name=".BActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".CActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".DActivity"
+            android:launchMode="singleInstance" /> <!-- 静态注册广播，7.0以后不可用 -->
+        <!-- <receiver android:name="com.liyh.networklistenerlibrary.NetChangeObserverr"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <service
             android:name=".aidl.AIDLService"
             android:process=":remote">
             <intent-filter>
                 <action android:name="com.liyh.app.aidl" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
     </application>
-
 
 </manifest>

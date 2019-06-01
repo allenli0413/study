@@ -10,10 +10,19 @@
 
     </declare-styleable>
     <declare-styleable name="KLineView">
-        <!--在attr标签下设置需要的自定义属性-->
-        <!--此处定义了一个设置图形的颜色:circle_color属性,格式是color,代表颜色-->
-        <!--格式有很多种,如资源id(reference)等等-->
-        <attr name="circle" format="color" />
-
+        <attr name="pointColor" format="color" />
+        <attr name="lineColor" format="color" />
+        <attr name="rectColor1" format="color" />
+        <attr name="rectColor2" format="color" />
+        <attr name="pointColor2" format="color" />
+        <attr name="lineColor2" format="color" />
+        <attr name="xTextSize" format="dimension" />
+        <attr name="yTextSize" format="dimension" />
+        <attr name="is2Line" format="boolean" />
+        <attr name="isNeedRect" format="boolean" />
+        <attr name="normal1Min" format="float" />
+        <attr name="normal1Max" format="float" />
+        <attr name="normal2Min" format="float" />
+        <attr name="normal2Max" format="float" />
     </declare-styleable>
 </resources>
