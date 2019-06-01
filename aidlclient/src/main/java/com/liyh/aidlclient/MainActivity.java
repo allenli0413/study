@@ -4,13 +4,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.liyh.aidlclient.alias.User;
+import com.liyh.aidlclient.databinding.ActivityMainBinding;
 import com.liyh.app.Book;
 import com.liyh.app.BookManager;
 import com.liyh.pluginlibrary.PluginActivity;
@@ -35,10 +39,24 @@ public class MainActivity extends PluginActivity {
     //包含Book对象的list
     private List<Book> mBooks;
 
+    private String name;
+    private User yahri;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
+//        User allen = new User("allen", 18, 15033334444L);
+        yahri = new User("Yahri", 20, 15088888888L);
+        binding.setUser(yahri);
+        binding.setUserName("我是哈哈儿");
+    }
+
+
+    public void setCustomName(@NonNull final String customName) {
+        yahri.setName( "吴彦祖");
+//        yahri.name = customName;
     }
 
     /**
