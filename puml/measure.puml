@@ -1,0 +1,16 @@
+ViewRootImpl测量流程，理想情况下(不受其他任何变量的干扰)的大概逻辑
+@startuml
+(*)--> 预测量
+If "测量结果满足" then
+--> [Yes] "测量结束"
+else
+--> [No] "布局窗口"
+Endif
+If "窗口改变" then
+--> [Yes] "最终测量"
+--> "测量结束"
+else
+--> [No] "测量结束"
+Endif
+-->(*)
+@enduml

@@ -2,6 +2,8 @@ package com.liyh.app;
 
 import android.app.Application;
 
+import com.liyh.httplibrary.HttpHelper;
+import com.liyh.httplibrary.OkHttpProcessor;
 import com.liyh.networklistenerlibrary.NetworkManager;
 
 
@@ -18,6 +20,8 @@ public class MyApplication extends Application {
 //        instance = this;
 //        DoubleLruCache.getInstance(this);
         NetworkManager.getDefault().init(this);
+//        HttpHelper.getInstance().init(new VolleyHttpProcessor(this));
+        HttpHelper.getInstance().init(new OkHttpProcessor());
     }
 
     @Override

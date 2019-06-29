@@ -1,0 +1,122 @@
+@startuml
+'https://www.jianshu.com/p/e26769213a17 //这里画的很风骚
+class View {
+    int mMeasuredWidth; //测量的宽度
+    int mMeasuredHeight; //测量的高度
+
+    //这两个属性不存在，可以假想存在，获取View的实际宽高，有get方法
+    *int width = mRight - mLeft;
+    *int height = mBottom - mTop;
+
+    int mLeft; //自己的左边距离父容器左边的距离
+    int mTop; //自己的上边距离父容器上边的距离
+    int mRight; //自己的右边距离父容器左边的距离
+    int mBottom; //自己的下边距离父容器上边的距离
+    //可以这么理解，将父容器左上角看作坐标原点，这四个值对应的就是距离坐标原点的距离
+
+    int mScrollX; //View的内容水平滑动的距离: View左边缘 - View内容左边缘
+    int mScrollY; //View的内容垂直滑动的距离: View上边缘 - View内容上边缘
+    //这里涉及一个滑动方向的问题，eg: View.scrollBy(x,y); 内部的实际操作是将View的内容scrollBy(-x,-y)
+
+    //下面这几个属性都是没有的，但是有set/get方法可以获取，可以假想有这几个属性
+    //View的实时坐标，仍然是相对于父容器
+    *int x;
+    *int y;
+    *int z;
+
+    //View相对于原来位置的偏移量
+    *int translationX;
+    *int translationY;
+    *int translationZ;
+    //换算关系:
+    x = mLeft + translationX;
+    y = mTop + translationY;
+    //上面这几个参数都是没有的，只有get方法可以获取，可以假想有这几个参数
+
+    void assignParent(ViewParent parent)
+
+    public final void measure(int widthMeasureSpec, int heightMeasureSpec)
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    protected final void setMeasuredDimension(int measuredWidth, int measuredHeight)
+    private void setMeasuredDimensionRaw(int measuredWidth, int measuredHeight)
+
+    public void layout(int l, int t, int r, int b)
+    protected boolean setFrame(int left, int top, int right, int bottom)
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom)
+
+    public void draw(Canvas canvas)
+    boolean draw(Canvas canvas, ViewGroup parent, long drawingTime)
+    private void drawBackground(Canvas canvas)
+    protected void onDraw(Canvas canvas)
+    protected void dispatchDraw(Canvas canvas)
+    public void onDrawForeground(Canvas canvas)
+    void invalidate()
+}
+
+class MotionEvent {
+    //获取相对于父容器左上角的坐标
+    getX();
+    getY();
+
+    //获取相对于手机屏幕左上角的坐标
+    getRawX();
+    getRawY();
+}
+
+interface ViewParent {
+    ViewParent getParent()
+    void requestLayout()
+    void invalidateChild(View child,Rect r)
+    void invalidateChildInParent(int[] location,Rect r)
+}
+
+interface ViewManager {
+    void addView(View view,ViewGroup.LayoutParams layoutParams)
+    void updateViewLayout(View view,ViewGroup.LayoutParams layoutParams)
+    void removeView(View view)
+}
+
+class ViewGroup {
+    protected abstract void onLayout(boolean changed,int l, int t, int r, int b)重载成抽象的了
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime)
+}
+
+class ViewRootImpl {
+    private void performTraversals()
+    private boolean measureHierarchy(View,LayoutParams,Resources,width,height)
+    private void performMeasure(widthMeasureSpec,heightMeasureSpec)
+    private void performLayout(LayoutParams,width,height)
+    private void performDraw()
+    private void draw(boolean fullRedrawNeeded)
+    private boolean drawSoftware(Surface, AttachInfo, int xoff, int yoff,boolean scalingRequired, Rect)
+
+    void invalidate()
+}
+
+View <|-- ViewGroup
+ViewParent <|.. ViewGroup
+ViewManager <|.. ViewGroup
+
+ViewParent <|.. ViewRootImpl
+ViewManager <|.. WindowManager
+
+@enduml
+
+'
+'draw过程: 一个View在draw()内部通过Canvas的变化，转换为自身内容坐标系，然后再调用到onDraw()中，然后再交给子View去，子View会先save()一下，然后
+'先转换为自己的坐标系，然后再onDraw()，画完了在restore()，然后父类再交给第二个子控件，依次类推
+'
+'绘制的三个标签的计算:
+'PFLAG_DIRTY         0010 脏区域，表示需要绘制
+'PFLAG_DIRTY_OPAQUE  0100 实心区域，表示不需要绘制背景
+'PFLAG_DIRTY_MASK    0110 检测标记
+'硬件加速绘制与绘图缓存先略过!!!
+'
+'开启硬件加速:属性动画不走draw，关闭硬件加速，属性动画走draw
+'开启硬件加速:offsetLeftAndRight()不走draw，并且绘制正常，关闭硬件加速，走draw，并且移动留下的区域显示黑色
+'参考:layout()可以看LinearLayout的实现，dispatchDraw()找ViewGroup的实现，draw()可以看TextView.setText()的实现
+'
+'
+'需要理解滑动情况下坐标系的变换过程
+'1 mScrollX/mScrollY
+'2 view.scrollBy(20,20); 实际是view的内容(不包括背景)移动(-20,-20)的距离

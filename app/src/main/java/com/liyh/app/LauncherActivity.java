@@ -11,16 +11,24 @@ import android.widget.TextView;
 import com.liyh.annotation.BindView;
 import com.liyh.annotation.OnClick;
 import com.liyh.app.database.User;
+import com.liyh.app.ioc.IocActivity;
+import com.liyh.app.permission.PermissionActivity;
 import com.liyh.app.view.CustomViewActivity;
 import com.liyh.app.view.KLineActivity;
 import com.liyh.app.view.StepActivity;
 import com.liyh.butterknifelibrary.ButterKnife;
 import com.liyh.databaselibrary.BaseDao;
 import com.liyh.databaselibrary.DataDaoFactory;
+import com.liyh.httplibrary.HttpCallback;
+import com.liyh.httplibrary.HttpHelper;
 import com.liyh.pluginlibrary.PluginManager;
 import com.liyh.pluginlibrary.ProxyActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LauncherActivity extends Activity {
+    private static final String TAG = "LauncherActivity";
     @BindView(R.id.bt_jump)
     public Button btJump;
     @BindView(R.id.tv_text)
@@ -69,7 +77,7 @@ public class LauncherActivity extends Activity {
     }
 
     public void toB(View view) {
-        startActivity(new Intent(this,BActivity.class));
+        startActivity(new Intent(this, BActivity.class));
     }
 
     public void toTreeView(View view) {
@@ -82,5 +90,29 @@ public class LauncherActivity extends Activity {
 
     public void toKLine(View view) {
         startActivity(new Intent(this, KLineActivity.class));
+    }
+
+    public void toIoc(View view) {
+        startActivity(new Intent(this, IocActivity.class));
+    }
+
+    private String url = "http://v.juhe.cn/historyWeather/citys";
+
+    public void toNetwork(View view) {
+        Map<String, Object> params = new HashMap<>();
+//        params.put("province_id", 1);
+//        params.put("key", "bb52107206585ab074f5e59a8c73875b");
+        HttpHelper.getInstance().post(url, params, new HttpCallback<ResultBean>() {
+            @Override
+            protected void success(ResultBean resultBean) {
+                Log.e(TAG, "success: " + resultBean.toString());
+            }
+        });
+    }
+    public void toPermission(View view) {
+        startActivity(new Intent(this, PermissionActivity.class));
+    }
+    public void toNo(View view) {
+//        startActivity(new Intent(this, IocActivity.class));
     }
 }

@@ -1,1 +1,1 @@
-include ':app', ':hearttreelibrary', ':networklistenerlibrary', ':Annotation', ':butterknifelibrary', ':Complier', ':aidlclient', ':recyclerviewlibrary', ':pluginlibrary', ':databaselibrary'
+include ':app', ':hearttreelibrary', ':networklistenerlibrary', ':Annotation', ':butterknifelibrary', ':Complier', ':aidlclient', ':recyclerviewlibrary', ':pluginlibrary', ':databaselibrary', ':ioclibrary', ':httplibrary'

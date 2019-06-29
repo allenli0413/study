@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyApplication"
@@ -16,10 +17,13 @@
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.KLineActivity"
-            android:screenOrientation="landscape"></activity>
+        <activity android:name=".permission.PermissionActivity"></activity>
+        <activity
+            android:name=".view.KLineActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".view.StepActivity" />
         <activity android:name=".database.DataBaseActivity" />
         <activity
@@ -45,7 +49,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".DActivity"
-            android:launchMode="singleInstance" /> <!-- 静态注册广播，7.0以后不可用 -->
+            android:launchMode="singleInstance" />
+        <activity android:name=".ioc.IocActivity" /> <!-- 静态注册广播，7.0以后不可用 -->
         <!-- <receiver android:name="com.liyh.networklistenerlibrary.NetChangeObserverr"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->

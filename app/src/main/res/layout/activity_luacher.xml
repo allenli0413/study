@@ -69,5 +69,34 @@
         android:text="折线图"
         android:textColor="#fff"
         android:textSize="20dp" />
-
+    <Button
+        android:onClick="toIoc"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="跳转到Ico" />
+    <TextView
+        android:onClick="toNetwork"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f00"
+        android:gravity="center"
+        android:text="网络请求"
+        android:textColor="#fff"
+        android:textSize="20dp" />
+    <Button
+        android:onClick="toPermission"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="跳转到权限申请" />
+    <TextView
+        android:onClick="toNo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#f00"
+        android:gravity="center"
+        android:text="no"
+        android:textColor="#fff"
+        android:textSize="20dp" />
 </LinearLayout>
